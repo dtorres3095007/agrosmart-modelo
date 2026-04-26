@@ -1,18 +1,34 @@
 import React from "react";
-import { Leaf, Sprout } from "lucide-react";
+import { Leaf, Sprout, X } from "lucide-react";
 import { menuItems } from "../../constants/navigation.jsx";
 
-function Sidebar({ activePage, onNavigate }) {
+function Sidebar({ activePage, isOpen, onClose, onNavigate }) {
   return (
-    <aside className="hidden h-screen w-[250px] shrink-0 border-r border-slate-200 bg-white lg:flex lg:flex-col">
-      <div className="flex h-28 items-center gap-3 px-5">
-        <div className="grid h-11 w-11 place-items-center rounded-full bg-agro-50 text-agro-700">
-          <Leaf size={30} strokeWidth={1.9} />
+    <aside
+      className={`fixed inset-y-0 left-0 z-30 h-screen w-[280px] shrink-0 border-r border-slate-200 bg-white transition-all duration-300 lg:static lg:flex lg:w-[280px] lg:translate-x-0 lg:flex-col ${
+        isOpen
+          ? "translate-x-0"
+          : "-translate-x-full"
+      }`}
+    >
+      <div className="flex h-28 items-center justify-between gap-3 px-5">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-agro-50 text-agro-700">
+            <Leaf size={30} strokeWidth={1.9} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xl font-bold leading-6 text-agro-700">AgroSostenible</p>
+            <p className="mt-1 text-xs font-medium text-slate-500">Modelo Económico-Financiero</p>
+          </div>
         </div>
-        <div>
-          <p className="text-xl font-bold leading-6 text-agro-700">AgroSostenible</p>
-          <p className="mt-1 text-xs font-medium text-slate-500">Modelo Económico-Financiero</p>
-        </div>
+        <button
+          aria-label="Cerrar menú"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-md text-slate-600 transition hover:bg-slate-100 lg:hidden"
+          type="button"
+          onClick={onClose}
+        >
+          <X size={21} />
+        </button>
       </div>
 
       <nav className="flex-1 space-y-2 overflow-y-auto px-3">
