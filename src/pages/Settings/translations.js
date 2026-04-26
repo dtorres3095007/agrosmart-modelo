@@ -1,3 +1,5 @@
+const documentsBasePath = `${import.meta.env.BASE_URL}documents/`;
+
 export const settingsTranslations = {
   hero: {
     title: "Guía rápida del Modelo y Plataforma",
@@ -98,14 +100,16 @@ export const settingsTranslations = {
         title: "Manual de usuario",
         text: "Guía completa para utilizar la plataforma, entender el modelo, sus parámetros y generar reportes.",
         buttonLabel: "Descargar manual PDF",
-        href: "/documents/manual-de-usuario.pdf"
+        fileName: "manual-de-usuario.pdf",
+        href: `${documentsBasePath}manual-de-usuario.pdf`
       },
       {
         icon: "spreadsheet",
         title: "Modelo económico financiero",
         text: "Archivo Excel completo con el modelo económico-financiero, escenarios, cálculos y supuestos detallados.",
         buttonLabel: "Descargar modelo Excel",
-        href: "/documents/modelo-economico-financiero.xlsx"
+        fileName: "modelo-economico-financiero.xlsx",
+        href: `${documentsBasePath}modelo-economico-financiero.xlsx`
       }
     ]
   },

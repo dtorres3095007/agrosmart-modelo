@@ -27,7 +27,7 @@ function DocumentsSection() {
               </div>
               <a
                 className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-agro-600 px-4 text-sm font-bold text-white transition hover:bg-agro-700"
-                download
+                download={document.fileName}
                 href={document.href}
               >
                 <DownloadIcon size={17} />
