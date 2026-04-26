@@ -9,6 +9,12 @@ function AppLayout({ activePage, children, onNavigate }) {
 
   const closeSidebar = () => setIsSidebarOpen(false);
 
+  const closeSidebarIfMobile = () => {
+    if (!window.matchMedia("(min-width: 1024px)").matches) {
+      closeSidebar();
+    }
+  };
+
   const handleNavigate = (pageId) => {
     onNavigate(pageId);
 
@@ -24,6 +30,7 @@ function AppLayout({ activePage, children, onNavigate }) {
           activePage={activePage}
           isOpen={isSidebarOpen}
           onClose={closeSidebar}
+          onLinkFollowed={closeSidebarIfMobile}
           onNavigate={handleNavigate}
         />
         <div className="flex h-screen min-w-0 flex-1 flex-col overflow-hidden">

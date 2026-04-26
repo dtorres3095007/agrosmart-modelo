@@ -4,7 +4,8 @@ import { jsPDF } from "jspdf";
 import * as XLSX from "xlsx";
 import { useCalculatorWizard } from "../../hooks/useCalculatorWizard.js";
 import { formatCurrency, formatNumber } from "../../utils/financialCalculations.js";
-import { navigateToPage } from "../../utils/router.js";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../../utils/router.js";
 import { metricToneClasses, placeholderIcons, referenceRows } from "./constants.js";
 import { placeholderTranslations } from "./translations.js";
 
@@ -429,6 +430,7 @@ function PlaceholderContent({
     updateField,
     values
   } = useCalculatorWizard();
+  const navigate = useNavigate();
   const isLastStep = activeStep === steps.length - 1;
   const ArrowLeftIcon = placeholderIcons.arrowLeft;
   const ArrowRightIcon = placeholderIcons.arrowRight;
@@ -514,7 +516,7 @@ function PlaceholderContent({
           <button
             className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-agro-500 px-4 text-sm font-bold text-agro-700 transition hover:bg-agro-50"
             type="button"
-            onClick={() => navigateToPage("quick-guide")}
+            onClick={() => navigate(pageRoutes["quick-guide"])}
           >
             <BookIcon size={17} />
             {header.guideButton}
