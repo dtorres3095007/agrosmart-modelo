@@ -3,12 +3,12 @@ import SectionCard from "../../../components/SectionCard/SectionCard.jsx";
 import { priceRanges, sensitivityIcons } from "../constants.js";
 import { sensitivityTranslations } from "../translations.js";
 
-function PriceRangeSelector({ selectedRangeId, onSelectRange }) {
+function PriceRangeSelector({ className = "", selectedRangeId, onSelectRange }) {
   const InfoIcon = sensitivityIcons.info;
   const selectedRange = priceRanges.find((range) => range.id === selectedRangeId);
 
   return (
-    <SectionCard>
+    <SectionCard className={className}>
       <h2 className="text-lg font-bold text-agro-900">{sensitivityTranslations.priceRange.title}</h2>
       <p className="mt-1 text-sm text-slate-600">{sensitivityTranslations.priceRange.description}</p>
       <div className="mt-5 flex flex-wrap gap-3">
@@ -38,15 +38,16 @@ function PriceRangeSelector({ selectedRangeId, onSelectRange }) {
           );
         })}
       </div>
-      <div className="mt-5 flex items-start gap-3 rounded-lg border border-agro-100 bg-agro-50 p-4 text-sm text-slate-600">
+      <div className="mt-5 flex items-center gap-3 rounded-lg border border-agro-100 bg-agro-50 p-3 text-sm text-slate-600">
         <InfoIcon className="shrink-0 text-agro-700" size={18} />
-        <div>
-          <p className="font-bold text-agro-900">{sensitivityTranslations.priceRange.variableTitle}</p>
-          <p className="mt-1">{sensitivityTranslations.priceRange.variableText}</p>
-          <p className="mt-2 text-xs font-bold text-agro-800">
+        <p className="min-w-0 text-xs font-semibold leading-5 text-slate-600 sm:text-sm">
+          <span className="font-bold text-agro-900">{sensitivityTranslations.priceRange.variableTitle}:</span>{" "}
+          {sensitivityTranslations.priceRange.variableText}
+          <span className="mx-2 text-slate-300">|</span>
+          <span className="font-bold text-agro-800">
             {sensitivityTranslations.priceRange.selectedLabel}: {selectedRange.label}
-          </p>
-        </div>
+          </span>
+        </p>
       </div>
     </SectionCard>
   );

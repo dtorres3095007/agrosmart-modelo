@@ -2,8 +2,8 @@ import React from "react";
 
 function DataTable({ headers, rows, showVariation = false, variationHeader }) {
   return (
-    <div className="mt-4 overflow-x-auto">
-      <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+    <div className="mt-4 max-w-full flex-1 overflow-auto overscroll-contain rounded-lg">
+      <table className="w-full min-w-[620px] border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-slate-200 text-xs text-slate-500">
             {headers.map((header) => (

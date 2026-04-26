@@ -1,5 +1,5 @@
 import React from "react";
-import { heroContent } from "../../constants/homeContent.jsx";
+import { pageHeroImage } from "./constants.js";
 
 function PageHero({ title, description, minHeight = "min-h-[140px]" }) {
   return (
@@ -7,7 +7,7 @@ function PageHero({ title, description, minHeight = "min-h-[140px]" }) {
       <div className={`relative ${minHeight}`}>
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('${heroContent.image}')` }}
+          style={{ backgroundImage: `url('${pageHeroImage}')` }}
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#ffffff_0%,rgba(255,255,255,0.94)_48%,rgba(255,255,255,0.16)_100%)]" />
         <div className="relative max-w-2xl px-6 py-7 md:px-8">

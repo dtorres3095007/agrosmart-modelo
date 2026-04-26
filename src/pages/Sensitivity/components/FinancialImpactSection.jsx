@@ -4,11 +4,11 @@ import { sensitivityIcons } from "../constants.js";
 import { sensitivityTranslations } from "../translations.js";
 import SensitivityChart from "./SensitivityChart.jsx";
 
-function FinancialImpactSection({ selectedRangeId }) {
+function FinancialImpactSection({ className = "", selectedRangeId }) {
   const InfoIcon = sensitivityIcons.info;
 
   return (
-    <SectionCard>
+    <SectionCard className={className}>
       <h2 className="text-lg font-bold text-agro-900">{sensitivityTranslations.chart.title}</h2>
       <p className="mt-1 text-sm text-slate-600">{sensitivityTranslations.chart.description}</p>
       <SensitivityChart selectedRangeId={selectedRangeId} />

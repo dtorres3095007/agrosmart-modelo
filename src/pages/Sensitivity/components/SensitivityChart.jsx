@@ -9,28 +9,28 @@ function SensitivityChart({ selectedRangeId }) {
 
   return (
     <div className="mt-5">
-      <div className="grid h-72 grid-cols-5 items-end gap-4 rounded-lg bg-slate-50 p-5">
+      <div className="grid h-80 grid-cols-3 items-end gap-5 rounded-lg bg-slate-50 px-5 pb-5 pt-6 sm:gap-8 sm:px-8">
         {sensitivityChartRows.map((row) => (
           <div
-            className={`flex h-full flex-col justify-end gap-3 transition-opacity ${
+            className={`flex h-full min-w-0 flex-col justify-end gap-4 transition-opacity ${
               row.id === selectedRangeId ? "opacity-100" : "opacity-35"
             }`}
             key={row.id}
           >
-            <div className="flex h-full items-end justify-center gap-2">
+            <div className="flex h-full items-end justify-center gap-2 sm:gap-3">
               {chartBars.map(([key, color]) => {
                 const value = row[key];
 
                 return (
                   <div
-                    className={`w-full max-w-7 rounded-t ${value ? color : "bg-slate-200"}`}
+                    className={`w-full max-w-16 rounded-t-md ${value ? color : "bg-slate-200"}`}
                     key={key}
-                    style={{ height: value ? `${Math.max((value / maxValue) * 100, 5)}%` : "5%" }}
+                    style={{ height: value ? `${Math.max((value / maxValue) * 100, 8)}%` : "8%" }}
                   />
                 );
               })}
             </div>
-            <p className={`text-center text-xs font-bold ${row.id === selectedRangeId ? "text-agro-800" : "text-slate-500"}`}>
+            <p className={`truncate text-center text-xs font-bold sm:text-sm ${row.id === selectedRangeId ? "text-agro-800" : "text-slate-500"}`}>
               {row.label}
             </p>
           </div>

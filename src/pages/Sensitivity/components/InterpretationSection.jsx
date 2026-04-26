@@ -3,9 +3,9 @@ import SectionCard from "../../../components/SectionCard/SectionCard.jsx";
 import { sensitivityIcons } from "../constants.js";
 import { sensitivityTranslations } from "../translations.js";
 
-function InterpretationSection() {
+function InterpretationSection({ className = "" }) {
   return (
-    <SectionCard>
+    <SectionCard className={className}>
       <h2 className="text-lg font-bold text-agro-900">{sensitivityTranslations.interpretation.title}</h2>
       <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {sensitivityTranslations.interpretation.cards.map((item) => {

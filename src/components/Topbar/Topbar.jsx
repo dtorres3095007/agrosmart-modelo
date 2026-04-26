@@ -1,7 +1,11 @@
 import React from "react";
-import { CircleHelp, Leaf, Menu } from "lucide-react";
+import { topbarIcons } from "./constants.js";
+import BrandMark from "./components/BrandMark.jsx";
+import HelpButton from "./components/HelpButton.jsx";
 
 function Topbar({ onNavigate, onToggleSidebar }) {
+  const MenuIcon = topbarIcons.menu;
+
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur md:px-6">
       <div className="flex items-center gap-3">
@@ -10,23 +14,13 @@ function Topbar({ onNavigate, onToggleSidebar }) {
           type="button"
           onClick={onToggleSidebar}
         >
-          <Menu size={22} />
+          <MenuIcon size={22} />
         </button>
-        <div className="flex items-center gap-2 lg:hidden">
-          <Leaf className="text-agro-700" size={24} />
-          <span className="text-base font-bold text-agro-800">AgroSostenible</span>
-        </div>
+        <BrandMark />
       </div>
 
       <div className="flex items-center gap-2 text-sm font-medium text-slate-600 md:gap-5">
-        <button
-          className="hidden items-center gap-2 rounded-md px-2 py-2 transition hover:bg-slate-100 sm:flex"
-          type="button"
-          onClick={() => onNavigate("quick-guide")}
-        >
-          <CircleHelp size={18} />
-          <span>Ayuda</span>
-        </button>
+        <HelpButton onClick={() => onNavigate("quick-guide")} />
       </div>
     </header>
   );

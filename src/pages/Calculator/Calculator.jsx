@@ -6,7 +6,7 @@ function Calculator() {
   return (
     <>
       <CalculatorHero />
-      <PlaceholderContent enableInternalScroll hideHeader showLiveSummary />
+      <PlaceholderContent enableInternalScroll hideHeader sidebarMode="live-summary" />
     </>
   );
 }

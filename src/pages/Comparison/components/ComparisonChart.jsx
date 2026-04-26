@@ -7,11 +7,11 @@ function ComparisonChart() {
   const maxValue = Math.max(...chartData.flatMap((item) => [item.income, item.costs, item.utility]));
 
   return (
-    <div className="mt-5">
-      <div className="flex h-64 items-end gap-5 rounded-lg bg-slate-50 p-5">
+    <div className="mt-5 flex flex-1 flex-col">
+      <div className="flex min-h-64 flex-1 min-w-0 items-end gap-3 rounded-lg bg-slate-50 p-4 sm:gap-5 sm:p-5">
         {chartData.map((item) => (
-          <div className="flex h-full flex-1 flex-col justify-end gap-3" key={item.label}>
-            <div className="flex h-full items-end justify-center gap-2">
+          <div className="flex h-full min-w-0 flex-1 flex-col justify-end gap-3" key={item.label}>
+            <div className="flex h-full items-end justify-center gap-1 sm:gap-2">
               {chartBars.map(([key, color]) => (
                 <div
                   className={`w-full max-w-8 rounded-t ${color}`}
@@ -21,7 +21,7 @@ function ComparisonChart() {
                 />
               ))}
             </div>
-            <p className="text-center text-xs font-bold text-slate-500">{item.label}</p>
+            <p className="text-center text-[11px] font-bold leading-4 text-slate-500 sm:text-xs">{item.label}</p>
           </div>
         ))}
       </div>

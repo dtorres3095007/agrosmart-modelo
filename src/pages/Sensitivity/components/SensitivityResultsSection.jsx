@@ -4,12 +4,12 @@ import { baselineSensitivityRows, sensitivityIcons } from "../constants.js";
 import { sensitivityTranslations } from "../translations.js";
 import ResultsTable from "./ResultsTable.jsx";
 
-function SensitivityResultsSection({ selectedRangeId }) {
+function SensitivityResultsSection({ className = "", selectedRangeId }) {
   const InfoIcon = sensitivityIcons.info;
   const selectedRow = baselineSensitivityRows.find((row) => row.id === selectedRangeId);
 
   return (
-    <SectionCard>
+    <SectionCard className={className}>
       <h2 className="text-lg font-bold text-agro-900">{sensitivityTranslations.results.title}</h2>
       <p className="mt-1 text-sm text-slate-600">{sensitivityTranslations.results.description}</p>
       <div className="mt-4 rounded-lg border border-agro-100 bg-agro-50 p-4">

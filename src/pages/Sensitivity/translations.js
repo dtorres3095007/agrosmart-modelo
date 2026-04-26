@@ -12,8 +12,8 @@ export const sensitivityTranslations = {
   priceRange: {
     title: "2. Variación de precios",
     description: "Selecciona el rango de variación para el análisis",
-    variableTitle: "Variable analizada",
-    variableText: "Precios de venta de los productos: yuca y frijol caupi.",
+    variableTitle: "Variable",
+    variableText: "Precios de yuca y frijol caupí",
     selectedLabel: "Rango seleccionado"
   },
   chart: {

@@ -11,24 +11,24 @@ import { defaultPriceRangeId } from "./constants.js";
 
 function Sensitivity() {
   const [selectedRangeId, setSelectedRangeId] = useState(defaultPriceRangeId);
+  const compactCardClassName = "xl:h-[260px]";
+  const analysisCardClassName = "xl:h-[560px]";
 
   return (
     <>
       <SensitivityHero />
 
-      <div className="grid gap-5 xl:grid-cols-[0.78fr_1.22fr]">
-        <SensitivityDefinition />
-        <PriceRangeSelector selectedRangeId={selectedRangeId} onSelectRange={setSelectedRangeId} />
-      </div>
-
-      <div className="grid gap-5 xl:grid-cols-[1.05fr_1fr]">
-        <FinancialImpactSection selectedRangeId={selectedRangeId} />
-        <SensitivityResultsSection selectedRangeId={selectedRangeId} />
-      </div>
-
-      <div className="grid gap-5 xl:grid-cols-[1fr_1fr]">
-        <InterpretationSection />
-        <RisksSection />
+      <div className="grid items-stretch gap-5 xl:grid-cols-2">
+        <SensitivityDefinition className={compactCardClassName} />
+        <PriceRangeSelector
+          className={compactCardClassName}
+          selectedRangeId={selectedRangeId}
+          onSelectRange={setSelectedRangeId}
+        />
+        <FinancialImpactSection className={analysisCardClassName} selectedRangeId={selectedRangeId} />
+        <SensitivityResultsSection className={analysisCardClassName} selectedRangeId={selectedRangeId} />
+        <InterpretationSection className={analysisCardClassName} />
+        <RisksSection className={analysisCardClassName} />
       </div>
 
       <SensitivityFooter />

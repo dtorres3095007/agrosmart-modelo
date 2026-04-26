@@ -1,5 +1,6 @@
 import React from "react";
-import { heroContent, projectPillars } from "../../constants/homeContent.jsx";
+import { heroBannerIcons, heroBannerImage } from "./constants.js";
+import { heroBannerTranslations } from "./translations.js";
 
 function HeroBanner() {
   return (
@@ -7,21 +8,21 @@ function HeroBanner() {
       <div className="relative min-h-[290px]">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('${heroContent.image}')` }}
+          style={{ backgroundImage: `url('${heroBannerImage}')` }}
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#ffffff_0%,rgba(255,255,255,0.94)_39%,rgba(255,255,255,0.46)_63%,rgba(255,255,255,0.02)_100%)]" />
 
         <div className="relative flex min-h-[290px] max-w-3xl flex-col justify-center px-6 py-7 md:px-8">
           <h1 className="text-3xl font-bold tracking-normal text-agro-900 md:text-4xl">
-            {heroContent.title}
+            {heroBannerTranslations.title}
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
-            {heroContent.description}
+            {heroBannerTranslations.description}
           </p>
 
           <div className="mt-8 grid max-w-2xl grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            {projectPillars.map((pillar) => {
-              const Icon = pillar.icon;
+            {heroBannerTranslations.pillars.map((pillar) => {
+              const Icon = heroBannerIcons[pillar.icon];
 
               return (
                 <article key={pillar.title}>

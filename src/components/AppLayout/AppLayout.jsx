@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { PanelLeft } from "lucide-react";
 import Sidebar from "../Sidebar/Sidebar.jsx";
 import Topbar from "../Topbar/Topbar.jsx";
+import FloatingMenuButton from "./components/FloatingMenuButton.jsx";
+import MobileMenuOverlay from "./components/MobileMenuOverlay.jsx";
 
 function AppLayout({ activePage, children, onNavigate }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.matchMedia("(min-width: 1024px)").matches);
@@ -38,25 +39,11 @@ function AppLayout({ activePage, children, onNavigate }) {
         </div>
       </div>
 
-      {isSidebarOpen && (
-        <button
-          aria-label="Cerrar menú"
-          className="fixed inset-0 z-20 bg-slate-900/40 lg:hidden"
-          type="button"
-          onClick={closeSidebar}
-        />
-      )}
-
-      <button
-        aria-label="Abrir menú"
-        className={`fixed bottom-5 right-5 z-20 h-12 w-12 place-items-center rounded-full bg-agro-700 text-white shadow-lg transition hover:bg-agro-800 lg:hidden ${
-          isSidebarOpen ? "hidden" : "grid"
-        }`}
-        type="button"
+      <MobileMenuOverlay isVisible={isSidebarOpen} onClick={closeSidebar} />
+      <FloatingMenuButton
+        isHidden={isSidebarOpen}
         onClick={() => setIsSidebarOpen((currentValue) => !currentValue)}
-      >
-        <PanelLeft size={22} />
-      </button>
+      />
     </div>
   );
 }

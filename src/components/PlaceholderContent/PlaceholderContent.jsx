@@ -1,39 +1,16 @@
-import React from "react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  BarChart3,
-  BookOpen,
-  Download,
-  FileSpreadsheet,
-  Info,
-  RefreshCcw,
-  Sprout,
-  TrendingUp,
-  Wallet
-} from "lucide-react";
+import React, { useRef } from "react";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
+import * as XLSX from "xlsx";
 import { useCalculatorWizard } from "../../hooks/useCalculatorWizard.js";
 import { formatCurrency, formatNumber } from "../../utils/financialCalculations.js";
 import { navigateToPage } from "../../utils/router.js";
-
-const referenceRows = [
-  ["Rendimiento yuca", "8.000 kg/ha"],
-  ["Rendimiento frijol caupi", "300 kg/ha"],
-  ["Pérdidas poscosecha", "15 %"],
-  ["Ciclos productivos", "2"],
-  ["Horizonte de análisis", "5 años"],
-  ["Tasa de descuento sugerida", "10 %"]
-];
+import { metricToneClasses, placeholderIcons, referenceRows } from "./constants.js";
+import { placeholderTranslations } from "./translations.js";
 
 function MetricCard({ icon: Icon, label, value, tone = "green" }) {
-  const toneClasses = {
-    green: "bg-agro-50 text-agro-800 border-agro-100",
-    blue: "bg-sky-50 text-sky-800 border-sky-100",
-    amber: "bg-amber-50 text-amber-800 border-amber-100"
-  };
-
   return (
-    <article className={`rounded-lg border p-4 ${toneClasses[tone]}`}>
+    <article className={`rounded-lg border p-4 ${metricToneClasses[tone]}`}>
       <div className="flex items-center justify-between gap-3">
         <span className="text-sm font-semibold">{label}</span>
         <Icon size={20} />
@@ -126,14 +103,16 @@ function Stepper({ activeStep, steps, onStepClick }) {
 }
 
 function ReferencePanel({ values, initialResults }) {
+  const InfoIcon = placeholderIcons.info;
+
   return (
     <aside className="rounded-lg border border-slate-200 bg-white p-5">
       <div className="flex items-center gap-2">
-        <h3 className="text-lg font-bold text-agro-900">Escenario 1 - Inicial</h3>
-        <Info size={18} className="text-sky-700" />
+        <h3 className="text-lg font-bold text-agro-900">{placeholderTranslations.reference.title}</h3>
+        <InfoIcon size={18} className="text-sky-700" />
       </div>
       <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-950">
-        Valores base para comparar con los resultados de tus entradas.
+        {placeholderTranslations.reference.note}
       </div>
       <div className="mt-4 divide-y divide-slate-100">
         {referenceRows.map(([label, value]) => (
@@ -145,11 +124,11 @@ function ReferencePanel({ values, initialResults }) {
       </div>
       <div className="mt-4 rounded-md bg-slate-50 p-3 text-sm">
         <div className="flex justify-between gap-3">
-          <span className="font-semibold text-slate-600">Área actual</span>
+          <span className="font-semibold text-slate-600">{placeholderTranslations.reference.currentArea}</span>
           <span className="font-bold text-slate-900">{formatNumber(values.area, { minimumFractionDigits: 2 })} ha</span>
         </div>
         <div className="mt-2 flex justify-between gap-3">
-          <span className="font-semibold text-slate-600">Utilidad base</span>
+          <span className="font-semibold text-slate-600">{placeholderTranslations.reference.baseUtility}</span>
           <span className="font-bold text-agro-800">{formatCurrency(initialResults.utility)}</span>
         </div>
       </div>
@@ -157,56 +136,21 @@ function ReferencePanel({ values, initialResults }) {
   );
 }
 
-function LiveSummary({ results }) {
-  const summaryItems = [
-    {
-      icon: Sprout,
-      label: "Producción total",
-      value: formatNumber(results.production),
-      suffix: "kg",
-      tone: "bg-agro-100 text-agro-700"
-    },
-    {
-      icon: TrendingUp,
-      label: "Ingresos estimados",
-      value: formatCurrency(results.income),
-      suffix: "$",
-      tone: "bg-green-100 text-green-700"
-    },
-    {
-      icon: Wallet,
-      label: "Costos totales",
-      value: formatCurrency(results.totalCosts),
-      suffix: "$",
-      tone: "bg-orange-100 text-orange-700"
-    },
-    {
-      icon: BarChart3,
-      label: "Utilidad neta",
-      value: formatCurrency(results.utility),
-      suffix: "$",
-      tone: "bg-sky-100 text-sky-700"
-    },
-    {
-      icon: Info,
-      label: "VAN (10%)",
-      value: formatCurrency(results.netPresentValue),
-      suffix: "$",
-      tone: "bg-violet-100 text-violet-700"
-    }
-  ];
+function LiveSummary({ layout = "footer", results }) {
+  const isSidebar = layout === "sidebar";
 
   return (
-    <aside className="border-t border-slate-200 bg-white p-4">
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
-        <p className="text-sm font-bold text-agro-700">Resumen en tiempo real</p>
+    <aside className={`${isSidebar ? "rounded-lg border border-slate-200 bg-white p-5" : "border-t border-slate-200 bg-white p-4"}`}>
+      <div className={`flex flex-col gap-1 ${isSidebar ? "" : "sm:flex-row sm:items-center sm:gap-3"}`}>
+        <p className="text-sm font-bold text-agro-700">{placeholderTranslations.liveSummary.title}</p>
         <p className="text-xs leading-5 text-slate-500">
-          Los valores se actualizan automáticamente al completar cada paso.
+          {placeholderTranslations.liveSummary.description}
         </p>
       </div>
-      <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        {summaryItems.map((item) => {
-          const Icon = item.icon;
+      <div className={`mt-3 grid gap-3 ${isSidebar ? "" : "sm:grid-cols-2 lg:grid-cols-5"}`}>
+        {placeholderTranslations.liveSummary.items.map((item) => {
+          const Icon = placeholderIcons[item.icon];
+          const value = item.suffix === "$" ? formatCurrency(results[item.valueKey]) : formatNumber(results[item.valueKey]);
 
           return (
             <article className="rounded-lg border border-slate-200 bg-white p-3" key={item.label}>
@@ -216,7 +160,7 @@ function LiveSummary({ results }) {
                 </span>
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-slate-600">{item.label}</p>
-                  <p className="mt-1 truncate text-sm font-bold text-slate-950">{item.value}</p>
+                  <p className="mt-1 truncate text-sm font-bold text-slate-950">{value}</p>
                   <p className="mt-1 text-xs font-semibold text-slate-500">{item.suffix}</p>
                 </div>
               </div>
@@ -224,8 +168,8 @@ function LiveSummary({ results }) {
           );
         })}
       </div>
-      <p className="mt-3 text-center text-xs font-semibold text-slate-500">
-        Completa todos los pasos para ver los resultados completos.
+      <p className={`mt-3 text-xs font-semibold text-slate-500 ${isSidebar ? "" : "text-center"}`}>
+        {placeholderTranslations.liveSummary.footer}
       </p>
     </aside>
   );
@@ -255,83 +199,209 @@ function SimpleBars({ data, keys }) {
   );
 }
 
-function ResultsView({ initialResults, results, values, onExportData, onPrint }) {
+function formatInputValue(field, value) {
+  if (field.prefix === "$") {
+    return formatCurrency(value);
+  }
+
+  if (field.suffix) {
+    return `${formatNumber(value, { maximumFractionDigits: 2 })} ${field.suffix}`;
+  }
+
+  return String(value ?? "");
+}
+
+const PdfReport = React.forwardRef(function PdfReport({ initialResults, results, steps, values }, ref) {
   const comparisonGap = results.utility - initialResults.utility;
+  const { pdf, results: resultTexts } = placeholderTranslations;
+  const exportTexts = placeholderTranslations.export;
+  const TrendingIcon = placeholderIcons.trending;
+  const WalletIcon = placeholderIcons.wallet;
+  const ChartIcon = placeholderIcons.barChart;
+  const inputGroups = steps
+    .filter((step) => step.fields.length > 0)
+    .map((step) => ({
+      title: step.title,
+      rows: step.fields.map((field) => [field.label, formatInputValue(field, values[field.name])])
+    }));
 
   return (
-    <div className="space-y-5">
-      <div className="grid gap-4 lg:grid-cols-3">
-        <MetricCard icon={TrendingUp} label="Ingresos" value={formatCurrency(results.income)} />
-        <MetricCard icon={Wallet} label="Costos" value={formatCurrency(results.totalCosts)} tone="amber" />
-        <MetricCard icon={BarChart3} label="Utilidad" value={formatCurrency(results.utility)} tone="blue" />
+    <div className="fixed -left-[9999px] top-0 w-[980px] bg-white p-10 text-slate-900" ref={ref}>
+      <div className="border-b border-slate-200 pb-5">
+        <p className="text-sm font-bold uppercase tracking-wide text-agro-700">{pdf.brand}</p>
+        <h1 className="mt-2 text-3xl font-bold text-agro-900">{pdf.title}</h1>
+        <p className="mt-2 text-sm text-slate-600">{pdf.description}</p>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-2">
+      <section className="mt-6">
+        <h2 className="text-lg font-bold text-agro-900">{pdf.inputsTitle}</h2>
+        <div className="mt-3 grid grid-cols-2 gap-4">
+          {inputGroups.map((group) => (
+            <article className="rounded-lg border border-slate-200 bg-slate-50 p-4" key={group.title}>
+              <h3 className="text-sm font-bold text-agro-900">{group.title}</h3>
+              <div className="mt-3 divide-y divide-slate-200">
+                {group.rows.map(([label, value]) => (
+                  <div className="flex justify-between gap-3 py-2 text-xs" key={label}>
+                    <span className="font-semibold text-slate-600">{label}</span>
+                    <span className="text-right font-bold text-slate-950">{value}</span>
+                  </div>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="text-lg font-bold text-agro-900">{pdf.mainResultsTitle}</h2>
+        <div className="mt-3 grid grid-cols-3 gap-4">
+          <MetricCard icon={TrendingIcon} label={resultTexts.income} value={formatCurrency(results.income)} />
+          <MetricCard icon={WalletIcon} label={resultTexts.costs} value={formatCurrency(results.totalCosts)} tone="amber" />
+          <MetricCard icon={ChartIcon} label={resultTexts.utility} value={formatCurrency(results.utility)} tone="blue" />
+        </div>
+      </section>
+
+      <section className="mt-6 grid grid-cols-2 gap-4">
         <article className="rounded-lg border border-slate-200 p-4">
-          <h3 className="font-bold text-slate-900">Ingresos vs costos</h3>
+          <h3 className="font-bold text-slate-900">{resultTexts.incomeVsCosts}</h3>
           <SimpleBars data={results.projections} keys={["income", "costs"]} />
-          <div className="mt-3 flex gap-4 text-xs font-bold text-slate-600">
-            <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-sm bg-agro-600" />Ingresos</span>
-            <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-sm bg-amber-500" />Costos</span>
-          </div>
         </article>
         <article className="rounded-lg border border-slate-200 p-4">
-          <h3 className="font-bold text-slate-900">Evolución de utilidad</h3>
+          <h3 className="font-bold text-slate-900">{resultTexts.utilityEvolution}</h3>
           <SimpleBars data={results.projections} keys={["utility"]} />
-          <div className="mt-3 text-xs font-bold text-slate-600">Proyección a 5 años con inflación de {values.inflation}%.</div>
         </article>
-      </div>
+      </section>
 
-      <div className="grid gap-4 xl:grid-cols-2">
+      <section className="mt-6 grid grid-cols-2 gap-4">
         <article className="rounded-lg border border-slate-200 p-4">
-          <h3 className="font-bold text-slate-900">Indicadores financieros</h3>
+          <h3 className="font-bold text-slate-900">{resultTexts.financialIndicators}</h3>
           <dl className="mt-4 grid gap-3 text-sm">
-            <div className="flex justify-between gap-4 border-b border-slate-100 pb-3">
-              <dt className="font-semibold text-slate-600">VAN</dt>
-              <dd className="font-bold text-slate-900">{formatCurrency(results.netPresentValue)}</dd>
+            <div className="flex justify-between border-b border-slate-100 pb-3">
+              <dt className="font-semibold text-slate-600">{resultTexts.van}</dt>
+              <dd className="font-bold">{formatCurrency(results.netPresentValue)}</dd>
             </div>
-            <div className="flex justify-between gap-4 border-b border-slate-100 pb-3">
-              <dt className="font-semibold text-slate-600">Relación Beneficio / Costo</dt>
-              <dd className="font-bold text-slate-900">{formatNumber(results.benefitCostRatio, { maximumFractionDigits: 2 })}</dd>
+            <div className="flex justify-between border-b border-slate-100 pb-3">
+              <dt className="font-semibold text-slate-600">{resultTexts.benefitCostRatio}</dt>
+              <dd className="font-bold">{formatNumber(results.benefitCostRatio, { maximumFractionDigits: 2 })}</dd>
             </div>
-            <div className="flex justify-between gap-4 border-b border-slate-100 pb-3">
-              <dt className="font-semibold text-slate-600">Punto de equilibrio</dt>
-              <dd className="font-bold text-slate-900">{formatNumber(results.breakEvenPoint, { maximumFractionDigits: 1 })}%</dd>
+            <div className="flex justify-between border-b border-slate-100 pb-3">
+              <dt className="font-semibold text-slate-600">{resultTexts.breakEvenPoint}</dt>
+              <dd className="font-bold">{formatNumber(results.breakEvenPoint, { maximumFractionDigits: 1 })}%</dd>
             </div>
-            <div className="flex justify-between gap-4">
-              <dt className="font-semibold text-slate-600">Payback</dt>
-              <dd className="font-bold text-slate-900">{results.paybackYear ? `Año ${results.paybackYear}` : "No recupera"}</dd>
+            <div className="flex justify-between">
+              <dt className="font-semibold text-slate-600">{resultTexts.payback}</dt>
+              <dd className="font-bold">{results.paybackYear ? `${exportTexts.yearPrefix} ${results.paybackYear}` : resultTexts.noRecovery}</dd>
             </div>
           </dl>
         </article>
-
-        <article className="rounded-lg border border-slate-200 p-4">
-          <h3 className="font-bold text-slate-900">Usuario vs Escenario 1</h3>
-          <div className="mt-4 grid gap-3 text-sm">
-            <div className="rounded-md bg-slate-50 p-3">
-              <span className="font-semibold text-slate-600">Utilidad usuario</span>
-              <p className="mt-1 text-lg font-bold text-slate-950">{formatCurrency(results.utility)}</p>
-            </div>
-            <div className="rounded-md bg-slate-50 p-3">
-              <span className="font-semibold text-slate-600">Utilidad escenario base</span>
-              <p className="mt-1 text-lg font-bold text-slate-950">{formatCurrency(initialResults.utility)}</p>
-            </div>
-            <div className="rounded-md bg-agro-50 p-3">
-              <span className="font-semibold text-agro-800">Diferencia</span>
-              <p className="mt-1 text-lg font-bold text-agro-900">{formatCurrency(comparisonGap)}</p>
-            </div>
-          </div>
+        <article className="rounded-lg border border-agro-100 bg-agro-50 p-4">
+          <h3 className="font-bold text-agro-900">{pdf.conclusionsTitle}</h3>
+          <p className="mt-3 text-sm leading-6 text-slate-700">
+            {pdf.conclusionsIntro} {formatCurrency(results.utility)}. {pdf.conclusionsDifference}{" "}
+            {formatCurrency(comparisonGap)}.
+          </p>
+          <ul className="mt-4 space-y-2 text-sm leading-5 text-slate-700">
+            {pdf.notes.map((note) => (
+              <li className="flex gap-2" key={note}>
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-agro-700" />
+                <span>{note}</span>
+              </li>
+            ))}
+          </ul>
         </article>
+      </section>
+    </div>
+  );
+});
+
+function ResultsView({ initialResults, results, resultsRef, values, onExportData, onExportPdf }) {
+  const comparisonGap = results.utility - initialResults.utility;
+  const resultTexts = placeholderTranslations.results;
+  const exportTexts = placeholderTranslations.export;
+  const DownloadIcon = placeholderIcons.download;
+  const FileSpreadsheetIcon = placeholderIcons.fileSpreadsheet;
+  const TrendingIcon = placeholderIcons.trending;
+  const WalletIcon = placeholderIcons.wallet;
+  const ChartIcon = placeholderIcons.barChart;
+
+  return (
+    <div className="space-y-5">
+      <div ref={resultsRef} className="space-y-5 bg-white">
+        <div className="grid gap-4 lg:grid-cols-3">
+          <MetricCard icon={TrendingIcon} label={resultTexts.income} value={formatCurrency(results.income)} />
+          <MetricCard icon={WalletIcon} label={resultTexts.costs} value={formatCurrency(results.totalCosts)} tone="amber" />
+          <MetricCard icon={ChartIcon} label={resultTexts.utility} value={formatCurrency(results.utility)} tone="blue" />
+        </div>
+
+        <div className="grid gap-4 xl:grid-cols-2">
+          <article className="rounded-lg border border-slate-200 p-4">
+            <h3 className="font-bold text-slate-900">{resultTexts.incomeVsCosts}</h3>
+            <SimpleBars data={results.projections} keys={["income", "costs"]} />
+            <div className="mt-3 flex gap-4 text-xs font-bold text-slate-600">
+              <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-sm bg-agro-600" />{resultTexts.income}</span>
+              <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-sm bg-amber-500" />{resultTexts.costs}</span>
+            </div>
+          </article>
+          <article className="rounded-lg border border-slate-200 p-4">
+            <h3 className="font-bold text-slate-900">{resultTexts.utilityEvolution}</h3>
+            <SimpleBars data={results.projections} keys={["utility"]} />
+            <div className="mt-3 text-xs font-bold text-slate-600">{resultTexts.projection} {values.inflation}%.</div>
+          </article>
+        </div>
+
+        <div className="grid gap-4 xl:grid-cols-2">
+          <article className="rounded-lg border border-slate-200 p-4">
+            <h3 className="font-bold text-slate-900">{resultTexts.financialIndicators}</h3>
+            <dl className="mt-4 grid gap-3 text-sm">
+              <div className="flex justify-between gap-4 border-b border-slate-100 pb-3">
+                <dt className="font-semibold text-slate-600">{resultTexts.van}</dt>
+                <dd className="font-bold text-slate-900">{formatCurrency(results.netPresentValue)}</dd>
+              </div>
+              <div className="flex justify-between gap-4 border-b border-slate-100 pb-3">
+                <dt className="font-semibold text-slate-600">{resultTexts.benefitCostRatio}</dt>
+                <dd className="font-bold text-slate-900">{formatNumber(results.benefitCostRatio, { maximumFractionDigits: 2 })}</dd>
+              </div>
+              <div className="flex justify-between gap-4 border-b border-slate-100 pb-3">
+                <dt className="font-semibold text-slate-600">{resultTexts.breakEvenPoint}</dt>
+                <dd className="font-bold text-slate-900">{formatNumber(results.breakEvenPoint, { maximumFractionDigits: 1 })}%</dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="font-semibold text-slate-600">{resultTexts.payback}</dt>
+                <dd className="font-bold text-slate-900">
+                  {results.paybackYear ? `${exportTexts.yearPrefix} ${results.paybackYear}` : resultTexts.noRecovery}
+                </dd>
+              </div>
+            </dl>
+          </article>
+
+          <article className="rounded-lg border border-slate-200 p-4">
+            <h3 className="font-bold text-slate-900">{resultTexts.userVsScenario}</h3>
+            <div className="mt-4 grid gap-3 text-sm">
+              <div className="rounded-md bg-slate-50 p-3">
+                <span className="font-semibold text-slate-600">{resultTexts.userUtility}</span>
+                <p className="mt-1 text-lg font-bold text-slate-950">{formatCurrency(results.utility)}</p>
+              </div>
+              <div className="rounded-md bg-slate-50 p-3">
+                <span className="font-semibold text-slate-600">{resultTexts.baseUtility}</span>
+                <p className="mt-1 text-lg font-bold text-slate-950">{formatCurrency(initialResults.utility)}</p>
+              </div>
+              <div className="rounded-md bg-agro-50 p-3">
+                <span className="font-semibold text-agro-800">{resultTexts.difference}</span>
+                <p className="mt-1 text-lg font-bold text-agro-900">{formatCurrency(comparisonGap)}</p>
+              </div>
+            </div>
+          </article>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-        <button className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-agro-500 px-4 text-sm font-bold text-agro-700 transition hover:bg-agro-50" type="button" onClick={onPrint}>
-          <Download size={17} />
-          Exportar PDF
+        <button className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-agro-500 px-4 text-sm font-bold text-agro-700 transition hover:bg-agro-50" type="button" onClick={onExportPdf}>
+          <DownloadIcon size={17} />
+          {resultTexts.exportPdf}
         </button>
         <button className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-agro-600 px-4 text-sm font-bold text-white transition hover:bg-agro-700" type="button" onClick={onExportData}>
-          <FileSpreadsheet size={17} />
-          Exportar Excel
+          <FileSpreadsheetIcon size={17} />
+          {resultTexts.exportExcel}
         </button>
       </div>
     </div>
@@ -341,8 +411,11 @@ function ResultsView({ initialResults, results, values, onExportData, onPrint })
 function PlaceholderContent({
   enableInternalScroll = false,
   hideHeader = false,
+  sidebarMode = "reference",
   showLiveSummary = false
 }) {
+  const resultsRef = useRef(null);
+  const pdfReportRef = useRef(null);
   const {
     activeStep,
     currentStep,
@@ -357,69 +430,104 @@ function PlaceholderContent({
     values
   } = useCalculatorWizard();
   const isLastStep = activeStep === steps.length - 1;
+  const ArrowLeftIcon = placeholderIcons.arrowLeft;
+  const ArrowRightIcon = placeholderIcons.arrowRight;
+  const BookIcon = placeholderIcons.book;
+  const RefreshIcon = placeholderIcons.refresh;
+  const SproutIcon = placeholderIcons.sprout;
+  const { export: exportTexts, header, results: resultTexts } = placeholderTranslations;
 
   const exportData = () => {
-    const inputRows = Object.entries(values).map(([key, value]) => ["Dato ingresado", key, value]);
+    const inputRows = Object.entries(values).map(([key, value]) => ({
+      seccion: exportTexts.inputSection,
+      campo: key,
+      valor: value
+    }));
     const resultRows = [
-      ["Resultado", "production", results.production],
-      ["Resultado", "income", results.income],
-      ["Resultado", "totalCosts", results.totalCosts],
-      ["Resultado", "utility", results.utility],
-      ["Resultado", "netPresentValue", results.netPresentValue],
-      ["Resultado", "benefitCostRatio", results.benefitCostRatio],
-      ["Resultado", "breakEvenPoint", results.breakEvenPoint],
-      ["Resultado", "paybackYear", results.paybackYear || "No recupera"]
-    ];
-    const projectionRows = results.projections.map((item) => [
-      "Proyeccion",
-      `Año ${item.year}`,
-      `Ingresos: ${item.income}`,
-      `Costos: ${item.costs}`,
-      `Utilidad: ${item.utility}`,
-      `Flujo: ${item.cashFlow}`
-    ]);
-    const rows = [["Seccion", "Campo", "Valor", "Detalle 1", "Detalle 2", "Detalle 3"], ...inputRows, ...resultRows, ...projectionRows];
-    const csv = rows.map((row) => row.map((cell) => `"${String(cell ?? "").replaceAll('"', '""')}"`).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "agrosostenible-resultados.csv";
-    link.click();
-    URL.revokeObjectURL(url);
+      [exportTexts.production, results.production],
+      [resultTexts.income, results.income],
+      [exportTexts.totalCosts, results.totalCosts],
+      [exportTexts.netUtility, results.utility],
+      [resultTexts.van, results.netPresentValue],
+      [resultTexts.benefitCostRatio, results.benefitCostRatio],
+      [resultTexts.breakEvenPoint, results.breakEvenPoint],
+      [resultTexts.payback, results.paybackYear || resultTexts.noRecovery]
+    ].map(([campo, valor]) => ({ seccion: exportTexts.resultSection, campo, valor }));
+    const projectionRows = results.projections.map((item) => ({
+      [exportTexts.year]: item.year,
+      [exportTexts.income]: item.income,
+      [exportTexts.costs]: item.costs,
+      [exportTexts.utility]: item.utility,
+      [exportTexts.cashFlow]: item.cashFlow
+    }));
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(inputRows), exportTexts.inputSheet);
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(resultRows), exportTexts.resultsSheet);
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(projectionRows), exportTexts.projectionSheet);
+    XLSX.writeFile(workbook, exportTexts.excelFileName);
+  };
+
+  const exportPdf = async () => {
+    if (!pdfReportRef.current) return;
+
+    const canvas = await html2canvas(pdfReportRef.current, {
+      backgroundColor: "#ffffff",
+      scale: 2,
+      useCORS: true
+    });
+    const image = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({ format: "a4", orientation: "portrait", unit: "mm" });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 10;
+    const imageWidth = pageWidth - margin * 2;
+    const imageHeight = (canvas.height * imageWidth) / canvas.width;
+    let position = margin;
+    let remainingHeight = imageHeight;
+
+    pdf.addImage(image, "PNG", margin, position, imageWidth, imageHeight);
+    remainingHeight -= pageHeight - margin * 2;
+
+    while (remainingHeight > 0) {
+      position = remainingHeight - imageHeight + margin;
+      pdf.addPage();
+      pdf.addImage(image, "PNG", margin, position, imageWidth, imageHeight);
+      remainingHeight -= pageHeight - margin * 2;
+    }
+
+    pdf.save(exportTexts.pdfFileName);
   };
 
   return (
     <section
       className={`rounded-lg border border-slate-200 bg-white shadow-panel ${
-        enableInternalScroll ? "flex h-[calc(100vh-255px)] min-h-[590px] flex-col overflow-hidden" : ""
+        enableInternalScroll ? "flex min-h-[590px] flex-col" : ""
       }`}
     >
       {!hideHeader ? (
         <div className="flex flex-col gap-3 border-b border-slate-100 p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Calculadora Económico-Financiera</h2>
-            <p className="mt-1 text-sm text-slate-600">
-              Ingresa los parámetros de tu sistema productivo para calcular los indicadores financieros.
-            </p>
+            <h2 className="text-2xl font-bold text-slate-900">{header.title}</h2>
+            <p className="mt-1 text-sm text-slate-600">{header.description}</p>
           </div>
           <button
             className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-agro-500 px-4 text-sm font-bold text-agro-700 transition hover:bg-agro-50"
             type="button"
             onClick={() => navigateToPage("quick-guide")}
           >
-            <BookOpen size={17} />
-            Ver guía
+            <BookIcon size={17} />
+            {header.guideButton}
           </button>
         </div>
       ) : null}
 
       <div
         className={`grid gap-4 p-0 xl:grid-cols-[1fr_330px] ${
-          enableInternalScroll ? "min-h-0 flex-1 overflow-hidden" : ""
+          enableInternalScroll ? "flex-1" : ""
         }`}
       >
-        <div className={`min-w-0 ${enableInternalScroll ? "overflow-y-auto" : ""}`}>
+        <div className="min-w-0">
           <div className="rounded-b-lg border-b border-slate-200">
             <Stepper activeStep={activeStep} steps={steps} onStepClick={setActiveStep} />
             <div className="min-w-0 flex-1 p-5 md:p-7">
@@ -431,8 +539,8 @@ function PlaceholderContent({
                   <p className="mt-2 text-sm text-slate-600">{currentStep.description}</p>
                 </div>
                 <button className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-slate-200 px-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50" type="button" onClick={resetForm}>
-                  <RefreshCcw size={16} />
-                  Reiniciar
+                  <RefreshIcon size={16} />
+                  {resultTexts.restart}
                 </button>
               </div>
 
@@ -441,9 +549,10 @@ function PlaceholderContent({
                   <ResultsView
                     initialResults={initialResults}
                     results={results}
+                    resultsRef={resultsRef}
                     values={values}
                     onExportData={exportData}
-                    onPrint={() => window.print()}
+                    onExportPdf={exportPdf}
                   />
                 ) : (
                   <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
@@ -466,16 +575,16 @@ function PlaceholderContent({
                   type="button"
                   onClick={goBack}
                 >
-                  <ArrowLeft size={17} />
-                  Anterior
+                  <ArrowLeftIcon size={17} />
+                  {resultTexts.previous}
                 </button>
                 <button
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-agro-600 px-6 text-sm font-bold text-white transition hover:bg-agro-700"
                   type="button"
                   onClick={isLastStep ? resetForm : goNext}
                 >
-                  {isLastStep ? "Nueva simulación" : "Siguiente"}
-                  <ArrowRight size={17} />
+                  {isLastStep ? resultTexts.newSimulation : resultTexts.next}
+                  <ArrowRightIcon size={17} />
                 </button>
               </div>
             </div>
@@ -484,20 +593,22 @@ function PlaceholderContent({
           <div className="m-4 flex flex-col gap-4 rounded-lg border border-agro-100 bg-agro-50 p-4 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-agro-600 text-white">
-                <Sprout size={22} />
+                <SproutIcon size={22} />
               </span>
-              <p>
-                Los resultados se recalculan automáticamente. Compara tus datos con el Escenario 1 -
-                Inicial para evaluar el impacto de tus decisiones.
-              </p>
+              <p>{placeholderTranslations.helper}</p>
             </div>
           </div>
         </div>
 
-        <div className={`grid content-start gap-4 border-t border-slate-200 p-4 xl:border-l xl:border-t-0 ${enableInternalScroll ? "overflow-y-auto" : ""}`}>
-          <ReferencePanel initialResults={initialResults} values={values} />
+        <div className="grid content-start gap-4 border-t border-slate-200 p-4 xl:border-l xl:border-t-0">
+          {sidebarMode === "live-summary" ? (
+            <LiveSummary layout="sidebar" results={results} />
+          ) : (
+            <ReferencePanel initialResults={initialResults} values={values} />
+          )}
         </div>
       </div>
+      <PdfReport initialResults={initialResults} results={results} steps={steps} values={values} ref={pdfReportRef} />
       {showLiveSummary ? <LiveSummary results={results} /> : null}
     </section>
   );

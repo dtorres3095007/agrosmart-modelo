@@ -14,21 +14,38 @@ import ScenarioSelector from "./components/ScenarioSelector.jsx";
 import { comparisonTranslations } from "./translations.js";
 
 function Comparison() {
+  const cardClassName = "xl:h-[440px]";
+
   return (
     <>
       <ComparisonHero />
       <ScenarioSelector />
 
-      <div className="grid gap-5 xl:grid-cols-3">
-        <ComparisonTableSection rows={productiveRows} showVariation table={comparisonTranslations.tables.productive} />
-        <ComparisonTableSection rows={economicRows} showVariation table={comparisonTranslations.tables.economic} />
-        <ComparisonTableSection rows={profitabilityRows} table={comparisonTranslations.tables.profitability} />
-      </div>
-
-      <div className="grid gap-5 xl:grid-cols-[1fr_1fr_0.82fr]">
-        <ComparisonTableSection rows={technologyRows} table={comparisonTranslations.tables.technology} />
-        <ComparisonChartSection />
-        <ConclusionCard />
+      <div className="grid items-stretch gap-5 xl:grid-cols-3">
+        <ComparisonTableSection
+          className={cardClassName}
+          rows={productiveRows}
+          showVariation
+          table={comparisonTranslations.tables.productive}
+        />
+        <ComparisonTableSection
+          className={cardClassName}
+          rows={economicRows}
+          showVariation
+          table={comparisonTranslations.tables.economic}
+        />
+        <ComparisonTableSection
+          className={cardClassName}
+          rows={profitabilityRows}
+          table={comparisonTranslations.tables.profitability}
+        />
+        <ComparisonTableSection
+          className={cardClassName}
+          rows={technologyRows}
+          table={comparisonTranslations.tables.technology}
+        />
+        <ComparisonChartSection className={cardClassName} />
+        <ConclusionCard className={cardClassName} />
       </div>
 
       <ComparisonFooter />
