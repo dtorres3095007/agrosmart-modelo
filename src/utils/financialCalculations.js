@@ -2,26 +2,46 @@ import { analysisHorizon } from "../constants/calculator.js";
 
 const toRate = (value) => Number(value || 0) / 100;
 
+const costCategoryFields = [
+  "soilPreparationCost",
+  "sowingCost",
+  "fertilizationCost",
+  "pestDiseaseControlCost",
+  "irrigationCost",
+  "harvestCost"
+];
+
+const includesCrop = (values, cropName) =>
+  values.primaryCrop === cropName || values.secondaryCrop === cropName;
+
 export function calculateFinancials(values) {
   const lossRate = toRate(values.postharvestLoss);
   const inflationRate = toRate(values.inflation);
   const discountRate = toRate(values.discountRate);
-  const productiveYield = Number(values.cassavaYield || 0) + Number(values.beanYield || 0);
-
-  const production =
-    Number(values.area || 0) * productiveYield * Number(values.cycles || 0) * (1 - lossRate);
-
-  const income = production * Number(values.salePrice || 0);
+  const productionFactor = Number(values.area || 0) * Number(values.cycles || 0) * (1 - lossRate);
+  const cassavaProduction = includesCrop(values, "Yuca")
+    ? productionFactor * Number(values.cassavaYield || 0)
+    : 0;
+  const beanProduction = includesCrop(values, "Frijol caupi")
+    ? productionFactor * Number(values.beanYield || 0)
+    : 0;
+  const production = cassavaProduction + beanProduction;
+  const cassavaIncome = cassavaProduction * Number(values.cassavaSalePrice || 0);
+  const beanIncome = beanProduction * Number(values.beanSalePrice || 0);
+  const income = cassavaIncome + beanIncome;
   const technologyInvestment =
     Number(values.irrigationSystemCost || 0) +
     Number(values.photovoltaicSystemCost || 0) +
     Number(values.sensorsCost || 0) +
     Number(values.installationCost || 0);
 
+  const categorizedCosts = costCategoryFields.reduce(
+    (total, fieldName) => total + Number(values[fieldName] || 0),
+    0
+  );
+
   const operatingCosts =
-    Number(values.suppliesCost || 0) +
-    Number(values.transportCost || 0) +
-    Number(values.administrativeCost || 0) +
+    categorizedCosts +
     Number(values.laborCost || 0) +
     Number(values.waterCost || 0) +
     Number(values.energyCost || 0) +
@@ -63,7 +83,11 @@ export function calculateFinancials(values) {
 
   return {
     production,
+    cassavaProduction,
+    beanProduction,
     income,
+    cassavaIncome,
+    beanIncome,
     operatingCosts,
     technologyInvestment,
     totalCosts,

@@ -1,5 +1,15 @@
 export const analysisHorizon = 5;
 
+const cropNames = {
+  bean: "Frijol caupi",
+  cassava: "Yuca"
+};
+
+const includesCrop = (values, cropName) =>
+  values.primaryCrop === cropName || values.secondaryCrop === cropName;
+
+export const isFieldVisible = (field, values) => (field.visibleWhen ? field.visibleWhen(values) : true);
+
 export const initialScenario = {
   area: 1,
   primaryCrop: "Yuca",
@@ -8,10 +18,14 @@ export const initialScenario = {
   beanYield: 300,
   cycles: 2,
   postharvestLoss: 15,
-  salePrice: 1200,
-  suppliesCost: 1800000,
-  transportCost: 450000,
-  administrativeCost: 300000,
+  cassavaSalePrice: 1200,
+  beanSalePrice: 4000,
+  soilPreparationCost: 5000000,
+  sowingCost: 780000,
+  fertilizationCost: 680100,
+  pestDiseaseControlCost: 254800,
+  irrigationCost: 0,
+  harvestCost: 1000000,
   inflation: 5,
   discountRate: 10,
   laborType: "familiar",
@@ -52,14 +66,16 @@ export const wizardSteps = [
         label: "Rendimiento yuca",
         suffix: "kg/ha",
         type: "number",
-        min: 0
+        min: 0,
+        visibleWhen: (values) => includesCrop(values, cropNames.cassava)
       },
       {
         name: "beanYield",
         label: "Rendimiento frijol caupi",
         suffix: "kg/ha",
         type: "number",
-        min: 0
+        min: 0,
+        visibleWhen: (values) => includesCrop(values, cropNames.bean)
       },
       {
         name: "cycles",
@@ -84,12 +100,68 @@ export const wizardSteps = [
     shortTitle: "Económicos",
     description: "Define precios, costos base y tasas para proyectar el escenario.",
     fields: [
-      { name: "salePrice", label: "Precio de venta", prefix: "$", suffix: "/kg", type: "number", min: 0 },
-      { name: "suppliesCost", label: "Costos de insumos", prefix: "$", type: "number", min: 0 },
-      { name: "transportCost", label: "Costos de transporte", prefix: "$", type: "number", min: 0 },
       {
-        name: "administrativeCost",
-        label: "Costos administrativos",
+        name: "cassavaSalePrice",
+        label: "Precio de venta yuca",
+        prefix: "$",
+        suffix: "/kg",
+        type: "number",
+        min: 0,
+        visibleWhen: (values) => includesCrop(values, cropNames.cassava)
+      },
+      {
+        name: "beanSalePrice",
+        label: "Precio de venta frijol caupi",
+        prefix: "$",
+        suffix: "/kg",
+        type: "number",
+        min: 0,
+        visibleWhen: (values) => includesCrop(values, cropNames.bean)
+      },
+      {
+        name: "soilPreparationCost",
+        label: "Preparación de suelos",
+        helper: "Incluye limpieza del terreno, adecuación de linderos, mecanización, arado, rastrillado, cerramiento, postes, alambre y actividades similares.",
+        prefix: "$",
+        type: "number",
+        min: 0
+      },
+      {
+        name: "sowingCost",
+        label: "Siembra",
+        helper: "Incluye semillas de yuca, semilla de frijol caupí, labores de establecimiento del cultivo y otros costos directos de siembra.",
+        prefix: "$",
+        type: "number",
+        min: 0
+      },
+      {
+        name: "fertilizationCost",
+        label: "Fertilización",
+        helper: "Incluye fertilizantes, cal líquida, agrimins, abono orgánico, compost, aplicaciones y demás enmiendas requeridas.",
+        prefix: "$",
+        type: "number",
+        min: 0
+      },
+      {
+        name: "pestDiseaseControlCost",
+        label: "Control de plagas y enfermedades",
+        helper: "Incluye guadaña, insecticidas, tratamientos de semilla, herbicidas, aplicaciones y productos fitosanitarios.",
+        prefix: "$",
+        type: "number",
+        min: 0
+      },
+      {
+        name: "irrigationCost",
+        label: "Riego",
+        helper: "Incluye costos directos del riego del ciclo productivo, como agua, operación del sistema, combustible, energía o jornales asociados.",
+        prefix: "$",
+        type: "number",
+        min: 0
+      },
+      {
+        name: "harvestCost",
+        label: "Cosecha",
+        helper: "Incluye corte, recolección, alistamiento, cargue, empaque, transporte interno y labores asociadas a sacar la producción del lote.",
         prefix: "$",
         type: "number",
         min: 0

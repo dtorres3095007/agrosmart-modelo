@@ -1,0 +1,21 @@
+export const resultsViewTranslations = {
+  income: "Ingresos",
+  costs: "Costos",
+  utility: "Utilidad",
+  incomeVsCosts: "Ingresos vs costos",
+  utilityEvolution: "Evolución de utilidad",
+  financialIndicators: "Indicadores financieros",
+  userVsScenario: "Usuario vs Escenario 1",
+  userUtility: "Utilidad usuario",
+  baseUtility: "Utilidad escenario base",
+  difference: "Diferencia",
+  projection: "Proyección a 5 años con inflación de",
+  van: "VAN",
+  benefitCostRatio: "Relación Beneficio / Costo",
+  breakEvenPoint: "Punto de equilibrio",
+  payback: "Payback",
+  noRecovery: "No recupera",
+  exportPdf: "Exportar PDF",
+  exportExcel: "Exportar Excel",
+  yearPrefix: "Año"
+};

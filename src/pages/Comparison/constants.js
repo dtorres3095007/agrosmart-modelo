@@ -16,39 +16,38 @@ export const scenarioTones = {
 };
 
 export const productiveRows = [
-  ["Producción total (kg/ha)", "8.300", "9.450", "11.600", "+39,8%"],
-  ["Rendimiento yuca (ton/ha)", "8", "9", "11", "+37,5%"],
-  ["Rendimiento frijol caupí (ton/ha)", "0,3", "0,45", "0,6", "+100%"],
-  ["Pérdidas poscosecha (%)", "15%", "8%", "5%", "-66,7%"]
+  ["Producción total (kg/ha)", "8.300", "11.600", "+39,8%"],
+  ["Rendimiento yuca (ton/ha)", "8", "11", "+37,5%"],
+  ["Rendimiento frijol caupí (ton/ha)", "0,3", "0,6", "+100%"],
+  ["Pérdidas poscosecha (%)", "15%", "5%", "-66,7%"]
 ];
 
 export const economicRows = [
-  ["Ingresos anuales ($)", formatCurrency(12600000), formatCurrency(14345100), formatCurrency(17608800), "+39,7%"],
-  ["Costos totales ($)", formatCurrency(6727800), formatCurrency(6400000), formatCurrency(6200000), "-7,8%"],
-  ["Utilidad neta ($)", formatCurrency(5872200), formatCurrency(7945100), formatCurrency(9352133), "+59,2%"]
+  ["Ingresos anuales ($)", formatCurrency(12600000), formatCurrency(17608800), "+39,7%"],
+  ["Costos totales ($)", formatCurrency(6727800), formatCurrency(6200000), "-7,8%"],
+  ["Utilidad neta ($)", formatCurrency(5872200), formatCurrency(9352133), "+59,2%"]
 ];
 
 export const profitabilityRows = [
-  ["VAN (10%)", formatCurrency(19073302), formatCurrency(25800000), formatCurrency(31500000)],
-  ["TIR (%)", "112,54%", "138%", "42%"],
-  ["Relación B/C", "1,57", "1,82", "2,05"],
-  ["Payback", "-", "1,8 años", "1,9 años"]
+  ["VAN (10%)", formatCurrency(19073302), formatCurrency(31500000)],
+  ["TIR (%)", "112,54%", "42%"],
+  ["Relación B/C", "1,57", "2,05"],
+  ["Payback", "-", "1,9 años"]
 ];
 
 export const technologyRows = [
-  ["Nivel tecnológico", "Bajo", "Medio", "Alto"],
-  ["Riego", "No medido", "Eficiente básico", "Tecnificado (goteo)"],
-  ["Energía", "No controlada", "Parcial", "Solar"],
-  ["Mano de obra", "No valorizada", "Parcial", "Eficiente"],
-  ["Uso de insumos", "Convencional", "Optimizado", "Alta eficiencia"],
-  ["Gestión de datos", "Nula", "Básica", "Digital (app + sensores)"],
-  ["Cumplimiento BPA", "Bajo", "Bajo", "Medio"]
+  ["Nivel tecnológico", "Bajo", "Alto"],
+  ["Riego", "No medido", "Tecnificado (goteo)"],
+  ["Energía", "No controlada", "Solar"],
+  ["Mano de obra", "No valorizada", "Eficiente"],
+  ["Uso de insumos", "Convencional", "Alta eficiencia"],
+  ["Gestión de datos", "Nula", "Digital (app + sensores)"],
+  ["Cumplimiento BPA", "Bajo", "Medio"]
 ];
 
 export const chartData = [
   { label: "Escenario 1", income: 12.6, costs: 6.73, utility: 5.87 },
-  { label: "Escenario 2", income: 14.35, costs: 6.4, utility: 7.95 },
-  { label: "Escenario 3", income: 17.61, costs: 6.2, utility: 9.35 }
+  { label: "Escenario 2", income: 17.61, costs: 6.2, utility: 9.35 }
 ];
 
 export const chartBars = [

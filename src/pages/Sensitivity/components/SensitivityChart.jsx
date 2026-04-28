@@ -2,6 +2,13 @@ import React from "react";
 import { chartBars, chartLegendClasses, sensitivityChartRows } from "../constants.js";
 import { sensitivityTranslations } from "../translations.js";
 
+function formatChartValue(value) {
+  return `$${Number(value || 0).toLocaleString("es-CO", {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0
+  })}M`;
+}
+
 function SensitivityChart({ selectedRangeId }) {
   const maxValue = Math.max(
     ...sensitivityChartRows.flatMap((row) => chartBars.map(([key]) => row[key] || 0))
@@ -9,7 +16,7 @@ function SensitivityChart({ selectedRangeId }) {
 
   return (
     <div className="mt-5">
-      <div className="grid h-80 grid-cols-3 items-end gap-5 rounded-lg bg-slate-50 px-5 pb-5 pt-6 sm:gap-8 sm:px-8">
+      <div className="grid h-80 grid-cols-3 items-end gap-5 rounded-lg bg-slate-50 px-5 pb-5 pt-8 sm:gap-8 sm:px-8">
         {sensitivityChartRows.map((row) => (
           <div
             className={`flex h-full min-w-0 flex-col justify-end gap-4 transition-opacity ${
@@ -22,11 +29,16 @@ function SensitivityChart({ selectedRangeId }) {
                 const value = row[key];
 
                 return (
-                  <div
-                    className={`w-full max-w-16 rounded-t-md ${value ? color : "bg-slate-200"}`}
-                    key={key}
-                    style={{ height: value ? `${Math.max((value / maxValue) * 100, 8)}%` : "8%" }}
-                  />
+                  <div className="flex h-full w-full max-w-16 flex-col items-center justify-end" key={key}>
+                    <span className="mb-1 whitespace-nowrap text-[10px] font-bold leading-none text-slate-600">
+                      {formatChartValue(value)}
+                    </span>
+                    <div
+                      className={`w-full rounded-t-md ${value ? color : "bg-slate-200"}`}
+                      style={{ height: value ? `${Math.max((value / maxValue) * 100, 8)}%` : "8%" }}
+                      title={formatChartValue(value)}
+                    />
+                  </div>
                 );
               })}
             </div>

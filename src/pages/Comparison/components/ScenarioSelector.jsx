@@ -6,7 +6,7 @@ function ScenarioSelector() {
   const InfoIcon = comparisonIcons.info;
 
   return (
-    <section className="grid gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-panel lg:grid-cols-[1fr_1fr_1fr_1.35fr]">
+    <section className="grid gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-panel lg:grid-cols-[1fr_1fr_1.35fr]">
       {comparisonTranslations.selector.scenarios.map((scenario) => {
         const Icon = comparisonIcons[scenario.icon];
 

@@ -2,34 +2,33 @@ export const comparisonTranslations = {
   hero: {
     title: "Comparación de Escenarios",
     description:
-      "Compara los resultados productivos, económicos y financieros de los tres escenarios para identificar el impacto de la tecnificación y las buenas prácticas agrícolas."
+      "Compara los resultados productivos, económicos y financieros de los dos escenarios para identificar el impacto de la tecnificación y las buenas prácticas agrícolas."
   },
   selector: {
     scenarios: [
       { id: "s1", name: "Escenario 1", subtitle: "Línea Base", icon: "sprout", tone: "baseline" },
-      { id: "s2", name: "Escenario 2", subtitle: "Optimización Intermedia", icon: "leaf", tone: "optimized" },
-      { id: "s3", name: "Escenario 3", subtitle: "Modernización Técnica", icon: "settings", tone: "modernized" }
+      { id: "s2", name: "Escenario 2", subtitle: "Modernización Técnica", icon: "settings", tone: "modernized" }
     ],
     note: "Los valores están expresados por hectárea (1 ha) y proyectados a 5 años."
   },
   tables: {
     productive: {
       title: "1. Comparación Productiva",
-      headers: ["Indicador", "Escenario 1", "Escenario 2", "Escenario 3"],
-      variationHeader: "Variación E1-E3"
+      headers: ["Indicador", "Escenario 1", "Escenario 2"],
+      variationHeader: "Variación E1-E2"
     },
     economic: {
       title: "2. Comparación Económica",
-      headers: ["Concepto", "Escenario 1", "Escenario 2", "Escenario 3"],
-      variationHeader: "Variación E1-E3"
+      headers: ["Concepto", "Escenario 1", "Escenario 2"],
+      variationHeader: "Variación E1-E2"
     },
     profitability: {
       title: "3. Comparación de Rentabilidad",
-      headers: ["Indicador", "Escenario 1", "Escenario 2", "Escenario 3"]
+      headers: ["Indicador", "Escenario 1", "Escenario 2"]
     },
     technology: {
       title: "4. Comparación Tecnológica y Operativa",
-      headers: ["Aspecto", "Escenario 1", "Escenario 2", "Escenario 3"]
+      headers: ["Aspecto", "Escenario 1", "Escenario 2"]
     }
   },
   chart: {
@@ -44,8 +43,8 @@ export const comparisonTranslations = {
   conclusion: {
     title: "Conclusión General",
     text:
-      "El Escenario 3 - Modernización Técnica presenta el mejor desempeño integral, con mayor productividad, mayor utilidad y mejores indicadores financieros.",
-    subtitle: "Mejora del Escenario 3 vs Escenario 1"
+      "El Escenario 2 - Modernización Técnica presenta el mejor desempeño integral, con mayor productividad, mayor utilidad y mejores indicadores financieros.",
+    subtitle: "Mejora del Escenario 2 vs Escenario 1"
   },
   footer:
     "Esta comparación permite identificar el impacto económico y financiero de avanzar hacia un sistema productivo más tecnificado y sostenible."

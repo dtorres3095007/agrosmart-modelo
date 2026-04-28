@@ -5,7 +5,7 @@ import { sensitivityTranslations } from "../translations.js";
 function ResultsTable({ selectedRangeId }) {
   return (
     <div className="mt-4 overflow-x-auto">
-      <table className="w-full min-w-[620px] text-left text-sm">
+      <table className="w-full min-w-[460px] text-left text-sm">
         <thead>
           <tr className="border-b border-slate-200 text-xs text-slate-500">
             {sensitivityTranslations.results.headers.map((header) => (

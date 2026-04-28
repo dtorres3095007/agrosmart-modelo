@@ -14,7 +14,7 @@ import ScenarioSelector from "./components/ScenarioSelector.jsx";
 import { comparisonTranslations } from "./translations.js";
 
 function Comparison() {
-  const cardClassName = "xl:h-[440px]";
+  const cardClassName = "xl:min-h-[440px]";
 
   return (
     <>
