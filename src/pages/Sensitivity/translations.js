@@ -23,23 +23,23 @@ export const sensitivityTranslations = {
     note:
       "El documento fuente presenta sensibilidad para -20%, precio base y +20%.",
     legend: {
-      scenario1: "Escenario 1",
-      scenario2: "Escenario 2"
+      scenario1: "Escenario tradicional",
+      scenario2: "Escenario técnico"
     }
   },
   results: {
     title: "4. Resumen de ingresos por escenario",
     description: "Ingresos ante variaciones en precios según la Tabla 46 del documento.",
-    note: "El Escenario 2 mantiene mayores márgenes absolutos de ingreso incluso en condiciones desfavorables.",
-    headers: ["Variación de precios", "Escenario 1", "Escenario 2"],
+    note: "El Escenario técnico mantiene mayores márgenes absolutos de ingreso incluso en condiciones desfavorables.",
+    headers: ["Variación de precios", "Escenario tradicional", "Escenario técnico"],
     selectedTitle: "Lectura del escenario seleccionado",
     selectedRows: {
       base:
         "El precio base corresponde a los ingresos originales reportados para los dos escenarios en la Tabla 46.",
       minus20:
-        "Con una reducción del 20% en precios, el Escenario 2 conserva ingresos superiores al precio base del Escenario 1.",
+        "Con una reducción del 20% en precios, el Escenario técnico conserva ingresos superiores al precio base del Escenario tradicional.",
       plus20:
-        "Con un incremento del 20% en precios, los dos escenarios aumentan sus ingresos de forma proporcional, con mayor valor absoluto en el Escenario 2."
+        "Con un incremento del 20% en precios, los dos escenarios aumentan sus ingresos de forma proporcional, con mayor valor absoluto en el Escenario técnico."
     }
   },
   interpretation: {
@@ -53,7 +53,7 @@ export const sensitivityTranslations = {
       {
         icon: "shield",
         title: "Mayor resiliencia",
-        text: "Incluso con precios -20%, el Escenario 2 conserva ingresos superiores al precio base del Escenario 1."
+        text: "Incluso con precios -20%, el Escenario técnico conserva ingresos superiores al precio base del Escenario tradicional."
       },
       {
         icon: "leaf",

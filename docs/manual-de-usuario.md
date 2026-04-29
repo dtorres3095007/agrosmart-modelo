@@ -27,8 +27,8 @@ El menú principal contiene las siguientes secciones:
 | Inicio | Vista general del modelo, acceso rápido a la calculadora y resumen del propósito del aplicativo. |
 | Proyecto | Explica la metodología, supuestos, escenario base e importancia del modelo para la toma de decisiones. |
 | Calculadora | Permite ingresar parámetros productivos, económicos, operativos y de tecnificación para obtener resultados en tiempo real. |
-| Resultados | Describe los indicadores financieros que genera el modelo y muestra un ejemplo del escenario 1. |
-| Comparación | Compara los escenarios 1, 2 y 3 en términos productivos, económicos, financieros y tecnológicos. |
+| Resultados | Describe los indicadores financieros que genera el modelo y muestra un ejemplo del escenario tradicional. |
+| Comparación | Compara los escenarios tradicional y técnico en términos productivos, económicos, financieros y tecnológicos. |
 | Análisis | Presenta el análisis de sensibilidad ante variaciones de precios y riesgos asociados. |
 | Guía rápida | Resume el flujo de uso, parámetros, supuestos, alcance, limitaciones y documentos descargables. |
 
@@ -45,7 +45,7 @@ Esta sección explica el alcance del modelo económico-financiero:
 - Introducción del modelo.
 - Metodología utilizada.
 - Supuestos productivos, económicos y operativos.
-- Escenario 1 o línea base.
+- Escenario tradicional o línea base.
 - Importancia del modelo para comparar escenarios y apoyar decisiones.
 
 El escenario base representa condiciones iniciales de baja tecnificación. Sus resultados sirven como punto de referencia para comparar mejoras productivas o tecnológicas.
@@ -116,7 +116,7 @@ Al finalizar, la calculadora muestra:
 - Gráficas de ingresos vs costos.
 - Evolución de utilidad.
 - Indicadores financieros.
-- Comparación del usuario frente al escenario 1.
+- Comparación del usuario frente al escenario tradicional.
 
 También permite exportar:
 
@@ -153,15 +153,14 @@ Esta sección ayuda a interpretar los indicadores:
 - Payback: periodo de recuperación de la inversión.
 - Punto de equilibrio: nivel mínimo de ingresos para cubrir costos.
 
-Incluye un ejemplo del escenario 1 o línea base y notas sobre el uso responsable de los resultados.
+Incluye un ejemplo del escenario tradicional o línea base y notas sobre el uso responsable de los resultados.
 
 ### 2.7 Sección Comparación
 
 Permite comparar:
 
-- Escenario 1: Línea base.
-- Escenario 2: Optimización intermedia.
-- Escenario 3: Modernización técnica.
+- Escenario tradicional: Línea base.
+- Escenario técnico: Modernización técnica.
 
 La comparación se organiza en:
 
@@ -436,4 +435,3 @@ Un escenario suele ser más atractivo si combina:
 - Revisa sensibilidad ante cambios de precios.
 - Usa los resultados como insumo para discusión técnica, no como decisión automática.
 - Exporta reportes cuando cierres una versión de análisis.
-

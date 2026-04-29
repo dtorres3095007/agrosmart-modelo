@@ -14,6 +14,45 @@ const costCategoryFields = [
 const includesCrop = (values, cropName) =>
   values.primaryCrop === cropName || values.secondaryCrop === cropName;
 
+const calculateInternalRate = (cashFlows) => {
+  const hasPositive = cashFlows.some((cashFlow) => cashFlow > 0);
+  const hasNegative = cashFlows.some((cashFlow) => cashFlow < 0);
+
+  if (!hasPositive || !hasNegative) return null;
+
+  const netPresentValueAtRate = (rate) =>
+    cashFlows.reduce((total, cashFlow, index) => total + cashFlow / (1 + rate) ** (index + 1), 0);
+
+  let lowerRate = -0.9999;
+  let upperRate = 1;
+  let lowerValue = netPresentValueAtRate(lowerRate);
+  let upperValue = netPresentValueAtRate(upperRate);
+
+  while (lowerValue * upperValue > 0 && upperRate < 100) {
+    upperRate *= 2;
+    upperValue = netPresentValueAtRate(upperRate);
+  }
+
+  if (lowerValue * upperValue > 0) return null;
+
+  for (let iteration = 0; iteration < 100; iteration += 1) {
+    const middleRate = (lowerRate + upperRate) / 2;
+    const middleValue = netPresentValueAtRate(middleRate);
+
+    if (Math.abs(middleValue) < 0.01) return middleRate * 100;
+
+    if (lowerValue * middleValue <= 0) {
+      upperRate = middleRate;
+      upperValue = middleValue;
+    } else {
+      lowerRate = middleRate;
+      lowerValue = middleValue;
+    }
+  }
+
+  return ((lowerRate + upperRate) / 2) * 100;
+};
+
 export function calculateFinancials(values) {
   const lossRate = toRate(values.postharvestLoss);
   const inflationRate = toRate(values.inflation);
@@ -72,6 +111,7 @@ export function calculateFinancials(values) {
     (total, item) => total + item.cashFlow / (1 + discountRate) ** item.year,
     0
   );
+  const internalRate = calculateInternalRate(projections.map((item) => item.cashFlow));
 
   const benefitCostRatio = totalCosts > 0 ? income / totalCosts : 0;
   const breakEvenPoint = income > 0 ? (totalCosts / income) * 100 : 0;
@@ -95,6 +135,7 @@ export function calculateFinancials(values) {
     yearOneCashFlow,
     projections,
     netPresentValue,
+    internalRate,
     benefitCostRatio,
     breakEvenPoint,
     paybackYear: paybackProjection?.year || null

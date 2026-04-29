@@ -1,6 +1,39 @@
 import { fieldControlClass } from "./constants.js";
 
+const moneyFormatter = new Intl.NumberFormat("es-CO", {
+  maximumFractionDigits: 0
+});
+
+const isMoneyField = (field) => field.prefix === "$";
+
+const formatMoneyInput = (value) => {
+  if (value === "" || value === null || value === undefined) {
+    return "";
+  }
+
+  const numericText = String(value).replace(/\D/g, "");
+
+  if (!numericText) {
+    return "";
+  }
+
+  return moneyFormatter.format(Number(numericText));
+};
+
+const getInputValue = (field, value) => (isMoneyField(field) ? formatMoneyInput(value) : value);
+
+const getInputChangeValue = (field, value) => {
+  if (!isMoneyField(field)) {
+    return value;
+  }
+
+  const numericText = value.replace(/\D/g, "");
+  return numericText === "" ? "" : numericText;
+};
+
 function FieldControl({ field, value, onChange }) {
+  const isFormattedMoneyField = field.type === "number" && isMoneyField(field);
+
   return (
     <label className="group relative block">
       <span className="text-sm font-semibold text-slate-700">{field.label}</span>
@@ -21,11 +54,12 @@ function FieldControl({ field, value, onChange }) {
         ) : (
           <input
             className={`${fieldControlClass} ${field.prefix ? "pl-8" : ""} ${field.suffix ? "pr-20" : ""}`}
-            max={field.max}
-            min={field.min}
-            type="number"
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
+            inputMode={isFormattedMoneyField ? "numeric" : undefined}
+            max={isFormattedMoneyField ? undefined : field.max}
+            min={isFormattedMoneyField ? undefined : field.min}
+            type={isFormattedMoneyField ? "text" : "number"}
+            value={getInputValue(field, value)}
+            onChange={(event) => onChange(getInputChangeValue(field, event.target.value))}
           />
         )}
         {field.suffix ? (

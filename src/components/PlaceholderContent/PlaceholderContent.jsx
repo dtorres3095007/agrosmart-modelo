@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import { useNavigate } from "react-router-dom";
 import { isFieldVisible } from "../../constants/calculator.js";
 import { useCalculatorWizard } from "../../hooks/useCalculatorWizard.js";
+import { formatNumber } from "../../utils/financialCalculations.js";
 import { pageRoutes } from "../../utils/router.js";
 import CalculatorHeader from "./components/CalculatorHeader/CalculatorHeader.jsx";
 import FieldControl from "./components/FieldControl/FieldControl.jsx";
@@ -17,6 +18,8 @@ import Stepper from "./components/Stepper/Stepper.jsx";
 import WizardNavigation from "./components/WizardNavigation/WizardNavigation.jsx";
 import WizardStepHeader from "./components/WizardStepHeader/WizardStepHeader.jsx";
 import { exportTranslations } from "./translations.js";
+
+const getExportInputValue = (field, value) => (field.type === "number" && value === "" ? 0 : value);
 
 function PlaceholderContent({
   enableInternalScroll = false,
@@ -50,7 +53,7 @@ function PlaceholderContent({
         .map((field) => ({
           seccion: exportTranslations.inputSection,
           campo: field.label,
-          valor: values[field.name]
+          valor: getExportInputValue(field, values[field.name])
         }))
     );
     const resultRows = [
@@ -59,6 +62,12 @@ function PlaceholderContent({
       [exportTranslations.totalCosts, results.totalCosts],
       [exportTranslations.netUtility, results.utility],
       [exportTranslations.van, results.netPresentValue],
+      [
+        exportTranslations.internalRate,
+        results.internalRate === null
+          ? exportTranslations.notApplicable
+          : `${formatNumber(results.internalRate, { maximumFractionDigits: 2 })}%`
+      ],
       [exportTranslations.benefitCostRatio, results.benefitCostRatio],
       [exportTranslations.breakEvenPoint, results.breakEvenPoint],
       [exportTranslations.payback, results.paybackYear || exportTranslations.noRecovery]

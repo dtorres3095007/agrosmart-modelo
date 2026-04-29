@@ -77,6 +77,14 @@ const PdfReport = React.forwardRef(function PdfReport({ initialResults, results,
               <dd className="font-bold">{formatCurrency(results.netPresentValue)}</dd>
             </div>
             <div className="flex justify-between border-b border-slate-100 pb-3">
+              <dt className="font-semibold text-slate-600">{resultTexts.internalRate}</dt>
+              <dd className="font-bold">
+                {results.internalRate === null
+                  ? resultTexts.notApplicable
+                  : `${formatNumber(results.internalRate, { maximumFractionDigits: 2 })}%`}
+              </dd>
+            </div>
+            <div className="flex justify-between border-b border-slate-100 pb-3">
               <dt className="font-semibold text-slate-600">{resultTexts.benefitCostRatio}</dt>
               <dd className="font-bold">{formatNumber(results.benefitCostRatio, { maximumFractionDigits: 2 })}</dd>
             </div>

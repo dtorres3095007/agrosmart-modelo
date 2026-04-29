@@ -71,7 +71,7 @@ export const projectInfoTranslations = {
     ]
   },
   baseline: {
-    title: "4. Escenario 1 - Línea Base (Condición Inicial)",
+    title: "4. Escenario tradicional",
     description:
       "Representa las condiciones actuales de producción con baja tecnificación y prácticas tradicionales.",
     featuresTitle: "Características principales",

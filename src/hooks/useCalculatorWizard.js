@@ -7,7 +7,12 @@ function normalizeValue(field, value) {
     return value;
   }
 
-  const numericValue = Math.max(Number(value || 0), Number(field.min ?? 0));
+  if (value === "") {
+    return "";
+  }
+
+  const parsedValue = Number(String(value).replace(/\./g, "").replace(",", "."));
+  const numericValue = Math.max(Number.isFinite(parsedValue) ? parsedValue : 0, Number(field.min ?? 0));
 
   if (field.max !== undefined) {
     return Math.min(numericValue, Number(field.max));

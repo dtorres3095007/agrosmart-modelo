@@ -66,9 +66,9 @@ export const resultsTranslations = {
     ]
   },
   baselineExample: {
-    title: "3. Ejemplo: Escenario 1 - Línea Base",
+    title: "3. Ejemplo: Escenario tradicional",
     subtitle: "Valores por hectárea",
-    note: "Nota: Los valores del escenario 1 no incluyen costos de mano de obra familiar ni consumo de agua.",
+    note: "Nota: Los valores del escenario tradicional no incluyen costos de mano de obra familiar ni consumo de agua.",
     metrics: [
       { icon: "money", label: "Ingresos anuales", valueKey: "income" },
       { icon: "wallet", label: "Costos totales", valueKey: "costs", tone: "orange" },

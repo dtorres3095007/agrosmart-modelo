@@ -29,7 +29,7 @@ function ResultsView({ initialResults, results, resultsRef, values, onExportData
             <h3 className="font-bold text-slate-900">{resultsViewTranslations.utilityEvolution}</h3>
             <SimpleBars data={results.projections} keys={["utility"]} />
             <div className="mt-3 text-xs font-bold text-slate-600">
-              {resultsViewTranslations.projection} {values.inflation}%.
+              {resultsViewTranslations.projection} {formatNumber(values.inflation, { maximumFractionDigits: 2 })}%.
             </div>
           </article>
         </div>
@@ -41,6 +41,14 @@ function ResultsView({ initialResults, results, resultsRef, values, onExportData
               <div className="flex justify-between gap-4 border-b border-slate-100 pb-3">
                 <dt className="font-semibold text-slate-600">{resultsViewTranslations.van}</dt>
                 <dd className="font-bold text-slate-900">{formatCurrency(results.netPresentValue)}</dd>
+              </div>
+              <div className="flex justify-between gap-4 border-b border-slate-100 pb-3">
+                <dt className="font-semibold text-slate-600">{resultsViewTranslations.internalRate}</dt>
+                <dd className="font-bold text-slate-900">
+                  {results.internalRate === null
+                    ? resultsViewTranslations.notApplicable
+                    : `${formatNumber(results.internalRate, { maximumFractionDigits: 2 })}%`}
+                </dd>
               </div>
               <div className="flex justify-between gap-4 border-b border-slate-100 pb-3">
                 <dt className="font-semibold text-slate-600">{resultsViewTranslations.benefitCostRatio}</dt>

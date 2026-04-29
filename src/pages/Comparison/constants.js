@@ -46,8 +46,8 @@ export const technologyRows = [
 ];
 
 export const chartData = [
-  { label: "Escenario 1", income: 12.6, costs: 6.73, utility: 5.87 },
-  { label: "Escenario 2", income: 17.61, costs: 6.2, utility: 9.35 }
+  { label: "Escenario tradicional", income: 12.6, costs: 6.73, utility: 5.87 },
+  { label: "Escenario técnico", income: 17.61, costs: 6.2, utility: 9.35 }
 ];
 
 export const chartBars = [
